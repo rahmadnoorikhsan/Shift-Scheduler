@@ -1,0 +1,8 @@
+{
+  "cycle": 1,
+  "order": ["Djaloe", "Aji", "Dimas", "Fazri", "Faza"],
+  "history": [
+    { "cycle": 1, "order": ["Djaloe", "Aji", "Dimas", "Fazri", "Faza"] }
+  ],
+  "last_reshuffled": null
+}

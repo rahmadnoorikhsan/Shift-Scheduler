@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jadwal Shift Technical Support</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #f5f4f0;
+      --surface:  #ffffff;
+      --border:   rgba(0,0,0,0.10);
+      --text:     #1a1a1a;
+      --muted:    #6b6b67;
+      --s1-bg:    #e1f5ee; --s1-clr: #085041;
+      --s2-bg:    #eeedfe; --s2-clr: #26215c;
+      --lib-bg:   #f1efe8; --lib-clr: #444441;
+      --blue-bg:  #e6f1fb; --blue-clr: #0c447c;
+      --radius:   10px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:      #1c1c1a; --surface: #252523; --border: rgba(255,255,255,0.10);
+        --text:    #f0efe8;  --muted:  #8a8a85;
+        --s1-bg:   #085041;  --s1-clr: #9fe1cb;
+        --s2-bg:   #26215c;  --s2-clr: #cecbf6;
+        --lib-bg:  #2c2c2a;  --lib-clr: #b4b2a9;
+        --blue-bg: #042c53;  --blue-clr: #b5d4f4;
+      }
+    }
+
+    body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 1.5rem 1rem; }
+
+    .container { max-width: 680px; margin: 0 auto; }
+
+    h1 { font-size: 20px; font-weight: 500; margin-bottom: 4px; }
+    .subtitle { font-size: 13px; color: var(--muted); margin-bottom: 1.5rem; }
+
+    .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+    .card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
+    .card-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+    .card-value { font-size: 22px; font-weight: 500; }
+
+    .section-label { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
+
+    .person-row {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--surface); border: 0.5px solid var(--border);
+      border-radius: var(--radius); padding: 10px 14px; margin-bottom: 8px;
+    }
+    .rank { font-size: 12px; color: var(--muted); min-width: 18px; text-align: center; }
+    .avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 500; flex-shrink: 0;
+      background: var(--surface); border: 0.5px solid var(--border); color: var(--muted);
+    }
+    .avatar.hl { background: var(--blue-bg); color: var(--blue-clr); }
+    .name { flex: 1; font-size: 14px; }
+    .name.bold { font-weight: 500; }
+
+    .badge {
+      font-size: 11px; font-weight: 500; padding: 2px 9px;
+      border-radius: 4px; min-width: 44px; text-align: center;
+    }
+    .s1  { background: var(--s1-bg);  color: var(--s1-clr); }
+    .s2  { background: var(--s2-bg);  color: var(--s2-clr); }
+    .lib { background: var(--lib-bg); color: var(--lib-clr); }
+
+    .week-grid { overflow-x: auto; margin-bottom: 1.5rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { font-weight: 500; font-size: 11px; color: var(--muted); padding: 6px 8px; text-align: center; border-bottom: 0.5px solid var(--border); }
+    th.name-col { text-align: left; }
+    td { padding: 7px 8px; text-align: center; border-bottom: 0.5px solid var(--border); }
+    td.name-col { text-align: left; font-weight: 500; white-space: nowrap; }
+    tr:last-child td { border-bottom: none; }
+
+    .history { margin-bottom: 1.5rem; }
+    .history-row { font-size: 13px; color: var(--muted); padding: 5px 0; border-bottom: 0.5px solid var(--border); display: flex; gap: 8px; }
+    .history-row:last-child { border-bottom: none; }
+    .history-cycle { font-weight: 500; color: var(--text); min-width: 65px; }
+
+    .info-box {
+      background: var(--blue-bg); border: 0.5px solid rgba(55,138,221,0.3);
+      border-radius: var(--radius); padding: 12px 14px; margin-bottom: 1.5rem;
+      font-size: 13px; color: var(--blue-clr);
+    }
+
+    .loading { text-align: center; padding: 3rem; color: var(--muted); font-size: 14px; }
+    .error { color: #a32d2d; background: #fcebeb; border-radius: var(--radius); padding: 12px 14px; font-size: 13px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Jadwal Shift Technical Support</h1>
+  <p class="subtitle">Full Coverage · S1 06:00–14:00 · S2 13:00–21:00</p>
+
+  <div id="app"><div class="loading">Memuat jadwal…</div></div>
+</div>
+
+<script>
+const DAYS  = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
+const WEEKS = ['Minggu 1','Minggu 2','Minggu 3','Minggu 4','Minggu 5'];
+
+// Pola shift per posisi [posisi][minggu][hari]
+const PATTERN = [
+  [["S2","S1","S2","LIBUR","S1","LIBUR","S1"],["S1","S1","S1","S1","LIBUR","S2","LIBUR"],["LIBUR","S1","S1","S1","S1","S1","LIBUR"],["S1","LIBUR","S2","S2","S2","S2","LIBUR"],["S2","S2","LIBUR","S2","S2","LIBUR","S2"]],
+  [["S1","S1","S1","S1","LIBUR","S2","LIBUR"],["LIBUR","S1","S1","S1","S1","S1","LIBUR"],["S1","LIBUR","S2","S2","S2","S2","LIBUR"],["S2","S2","LIBUR","S2","S2","LIBUR","S2"],["S2","S2","S2","LIBUR","S1","LIBUR","S1"]],
+  [["LIBUR","S1","S1","S1","S1","S1","LIBUR"],["S1","LIBUR","S2","S2","S2","S2","LIBUR"],["S2","S2","LIBUR","S2","S2","LIBUR","S2"],["S2","S2","S2","LIBUR","S1","LIBUR","S1"],["S1","S1","S1","S1","LIBUR","S2","LIBUR"]],
+  [["S1","LIBUR","S2","S2","S2","S2","LIBUR"],["S2","S2","LIBUR","S2","S2","LIBUR","S2"],["S2","S2","S2","LIBUR","S1","LIBUR","S1"],["S1","S1","S1","S1","LIBUR","S2","LIBUR"],["LIBUR","S1","S1","S1","S1","S1","LIBUR"]],
+  [["S2","S2","LIBUR","S2","S2","LIBUR","S2"],["S2","S2","S2","LIBUR","S1","LIBUR","S1"],["S1","S1","S1","S1","LIBUR","S2","LIBUR"],["LIBUR","S1","S1","S1","S1","S1","LIBUR"],["S1","LIBUR","S2","S2","S2","S2","LIBUR"]],
+];
+
+function badgeCls(s) { return s==='S1'?'s1':s==='S2'?'s2':'lib'; }
+function badge(s) { return `<span class="badge ${badgeCls(s)}">${s}</span>`; }
+function avatar(name) {
+  const hl = name==='Djaloe'||name==='Aji';
+  return `<div class="avatar${hl?' hl':''}">${name.slice(0,2).toUpperCase()}</div>`;
+}
+
+function renderApp(state) {
+  const { cycle, order, history, last_reshuffled } = state;
+  const reshuffledStr = last_reshuffled
+    ? new Date(last_reshuffled).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})
+    : '—';
+
+  // Senin W1 shift per orang
+  const w1mon = order.map((_,i) => PATTERN[i][0][0]);
+
+  let html = `
+    <div class="cards">
+      <div class="card"><div class="card-label">Siklus aktif</div><div class="card-value">Siklus ${cycle}</div></div>
+      <div class="card"><div class="card-label">Terakhir diacak</div><div class="card-value" style="font-size:15px;padding-top:4px">${reshuffledStr}</div></div>
+    </div>
+
+    <div class="section-label">Urutan personil siklus ini · shift Senin W1</div>
+    <div style="margin-bottom:1.5rem">
+      ${order.map((name,i)=>`
+        <div class="person-row">
+          <span class="rank">${i+1}</span>
+          ${avatar(name)}
+          <span class="name${name==='Djaloe'||name==='Aji'?' bold':''}">${name}</span>
+          ${badge(w1mon[i])}
+        </div>`).join('')}
+    </div>
+
+    <div class="section-label">Jadwal lengkap 5 minggu</div>
+    <div class="week-grid">
+      <table>
+        <thead>
+          <tr>
+            <th class="name-col">Personil</th>
+            ${DAYS.map(d=>`<th>${d}</th>`).join('')}
+          </tr>
+        </thead>
+        <tbody>
+          ${WEEKS.map((wk,wi)=>`
+            <tr><td colspan="8" style="padding:10px 8px 4px; font-size:11px; font-weight:500; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;">${wk}</td></tr>
+            ${order.map((name,pi)=>`
+              <tr>
+                <td class="name-col">${name}</td>
+                ${PATTERN[pi][wi].map(s=>`<td>${badge(s)}</td>`).join('')}
+              </tr>`).join('')}
+          `).join('')}
+        </tbody>
+      </table>
+    </div>`;
+
+  if (history && history.length > 1) {
+    html += `
+      <div class="section-label">Riwayat reshuffle</div>
+      <div class="history">
+        ${history.map(h=>`
+          <div class="history-row">
+            <span class="history-cycle">Siklus ${h.cycle}</span>
+            <span>${h.order.join(' → ')}</span>
+          </div>`).join('')}
+      </div>`;
+  }
+
+  html += `
+    <div class="info-box">
+      <strong>Cara reshuffle:</strong> Pergi ke repo GitHub → tab <em>Actions</em> → pilih workflow <em>Reshuffle Jadwal Shift</em> → klik <em>Run workflow</em> → ketik <code>reshuffle</code> → konfirmasi.
+      Halaman ini akan otomatis update dalam ~1 menit setelah workflow selesai.
+    </div>`;
+
+  document.getElementById('app').innerHTML = html;
+}
+
+async function loadState() {
+  try {
+    const res = await fetch('state.json?t=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const state = await res.json();
+    renderApp(state);
+  } catch(e) {
+    document.getElementById('app').innerHTML =
+      `<div class="error">Gagal memuat state.json: ${e.message}</div>`;
+  }
+}
+
+loadState();
+// Auto-refresh setiap 5 menit (berguna jika halaman dibiarkan terbuka saat Actions running)
+setInterval(loadState, 5 * 60 * 1000);
+</script>
+</body>
+</html>
