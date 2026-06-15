@@ -45,8 +45,15 @@ Jika ingin auto-reshuffle tiap 5 minggu sekali, tambahkan logika pengecekan sikl
 
 ## Constraint yang dijaga otomatis
 
-Saat reshuffle, script memastikan:
-- **Djaloe**: Shift Minggu terakhir (S2/LIBUR) → Shift Senin pertama siklus baru (S2/LIBUR) — tidak lompat ke S1
-- **Aji**: Shift Minggu terakhir (S1/LIBUR) → Shift Senin pertama siklus baru (S1/LIBUR) — tidak lompat ke S2
+Aturannya berbasis **seat (posisi), bukan nama**: siapa pun yang menempati seat yang
+masih bertugas di hari **Minggu Week 5** tidak boleh ganti tipe shift pada hari
+**Senin Week 1** tanpa libur di antaranya.
+- Berakhir **S1** (Minggu W5) → Senin W1 berikutnya harus **S1 atau LIBUR**
+- Berakhir **S2** (Minggu W5) → Senin W1 berikutnya harus **S2 atau LIBUR**
+- Berakhir **LIBUR** → bebas pindah ke seat mana saja
+
+Pada siklus saat ini, seat yang bertugas hari Minggu W5 adalah seat 1 (**Aji**, S1) dan
+seat 2 (**Djaloe**, S2), jadi merekalah yang terikat constraint. Setelah diacak,
+constraint otomatis mengikuti siapa pun yang menempati seat tersebut.
 
 Script mencoba hingga 10.000 kombinasi acak hingga constraint terpenuhi.
