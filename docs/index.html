@@ -3,107 +3,128 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jadwal Shift Technical Support</title>
+  <title>Jadwal Shift Technical Support — Full Coverage</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #f5f4f0;
-      --surface:  #ffffff;
-      --border:   rgba(0,0,0,0.10);
-      --text:     #1a1a1a;
-      --muted:    #6b6b67;
-      --s1-bg:    #e1f5ee; --s1-clr: #085041;
-      --s2-bg:    #eeedfe; --s2-clr: #26215c;
-      --lib-bg:   #f1efe8; --lib-clr: #444441;
-      --blue-bg:  #e6f1fb; --blue-clr: #0c447c;
-      --radius:   10px;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --bg:      #1c1c1a; --surface: #252523; --border: rgba(255,255,255,0.10);
-        --text:    #f0efe8;  --muted:  #8a8a85;
-        --s1-bg:   #085041;  --s1-clr: #9fe1cb;
-        --s2-bg:   #26215c;  --s2-clr: #cecbf6;
-        --lib-bg:  #2c2c2a;  --lib-clr: #b4b2a9;
-        --blue-bg: #042c53;  --blue-clr: #b5d4f4;
-      }
+      /* Warna persis dari spreadsheet (conditional formatting xlsx) */
+      --s1:      #C6E0B4;  /* hijau  */
+      --s2:      #FFE699;  /* kuning */
+      --libur:   #F4B084;  /* oranye */
+      --hari:    #B4C7E7;  /* biru   */
+      --cell-text: #1f1f1f;
+
+      --page-bg:  #e9eaec;
+      --paper:    #ffffff;
+      --grid:     #bfbfbf;   /* garis tabel ala Excel */
+      --head-bg:  #d9d9d9;   /* baris header kolom    */
+      --head-tx:  #2b2b2b;
+      --band-bg:  #44546a;   /* banner "Minggu N"     */
+      --band-tx:  #ffffff;
+      --title-bg: #305496;
+      --muted:    #5b6b7b;
     }
 
-    body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 1.5rem 1rem; }
-
-    .container { max-width: 680px; margin: 0 auto; }
-
-    h1 { font-size: 20px; font-weight: 500; margin-bottom: 4px; }
-    .subtitle { font-size: 13px; color: var(--muted); margin-bottom: 1.5rem; }
-
-    .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
-    .card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 14px 16px; }
-    .card-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
-    .card-value { font-size: 22px; font-weight: 500; }
-
-    .section-label { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
-
-    .person-row {
-      display: flex; align-items: center; gap: 10px;
-      background: var(--surface); border: 0.5px solid var(--border);
-      border-radius: var(--radius); padding: 10px 14px; margin-bottom: 8px;
-    }
-    .rank { font-size: 12px; color: var(--muted); min-width: 18px; text-align: center; }
-    .avatar {
-      width: 32px; height: 32px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 500; flex-shrink: 0;
-      background: var(--surface); border: 0.5px solid var(--border); color: var(--muted);
-    }
-    .avatar.hl { background: var(--blue-bg); color: var(--blue-clr); }
-    .name { flex: 1; font-size: 14px; }
-    .name.bold { font-weight: 500; }
-
-    .badge {
-      font-size: 11px; font-weight: 500; padding: 2px 9px;
-      border-radius: 4px; min-width: 44px; text-align: center;
-    }
-    .s1  { background: var(--s1-bg);  color: var(--s1-clr); }
-    .s2  { background: var(--s2-bg);  color: var(--s2-clr); }
-    .lib { background: var(--lib-bg); color: var(--lib-clr); }
-
-    .week-grid { overflow-x: auto; margin-bottom: 1.5rem; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th { font-weight: 500; font-size: 11px; color: var(--muted); padding: 6px 8px; text-align: center; border-bottom: 0.5px solid var(--border); }
-    th.name-col { text-align: left; }
-    td { padding: 7px 8px; text-align: center; border-bottom: 0.5px solid var(--border); }
-    td.name-col { text-align: left; font-weight: 500; white-space: nowrap; }
-    tr:last-child td { border-bottom: none; }
-
-    .history { margin-bottom: 1.5rem; }
-    .history-row { font-size: 13px; color: var(--muted); padding: 5px 0; border-bottom: 0.5px solid var(--border); display: flex; gap: 8px; }
-    .history-row:last-child { border-bottom: none; }
-    .history-cycle { font-weight: 500; color: var(--text); min-width: 65px; }
-
-    .info-box {
-      background: var(--blue-bg); border: 0.5px solid rgba(55,138,221,0.3);
-      border-radius: var(--radius); padding: 12px 14px; margin-bottom: 1.5rem;
-      font-size: 13px; color: var(--blue-clr);
+    body {
+      font-family: Calibri, "Segoe UI", system-ui, sans-serif;
+      background: var(--page-bg);
+      color: #1f1f1f;
+      padding: 1.5rem 1rem 3rem;
+      -webkit-font-smoothing: antialiased;
     }
 
-    .loading { text-align: center; padding: 3rem; color: var(--muted); font-size: 14px; }
-    .error { color: #a32d2d; background: #fcebeb; border-radius: var(--radius); padding: 12px 14px; font-size: 13px; }
+    .sheet {
+      max-width: 1040px;
+      margin: 0 auto;
+      background: var(--paper);
+      border: 1px solid var(--grid);
+      box-shadow: 0 1px 3px rgba(0,0,0,.12);
+    }
+
+    /* ---- Judul ---- */
+    .title {
+      background: var(--title-bg);
+      color: #fff;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: .02em;
+      padding: 14px 12px;
+    }
+    .meta {
+      display: flex; flex-wrap: wrap; gap: 6px 18px;
+      justify-content: space-between; align-items: center;
+      padding: 9px 14px; font-size: 13px; color: var(--muted);
+      border-bottom: 1px solid var(--grid); background: #f7f8fa;
+    }
+    .meta b { color: #1f1f1f; font-weight: 700; }
+
+    /* ---- Legenda ---- */
+    .legend { display: flex; flex-wrap: wrap; gap: 8px 22px; padding: 11px 14px; font-size: 13px; border-bottom: 1px solid var(--grid); }
+    .legend span { display: inline-flex; align-items: center; gap: 7px; }
+    .sw { width: 26px; height: 16px; border: 1px solid rgba(0,0,0,.25); display: inline-block; }
+    .sw.s1 { background: var(--s1); } .sw.s2 { background: var(--s2); } .sw.libur { background: var(--libur); }
+
+    /* ---- Blok minggu ---- */
+    .week { padding: 0 14px; }
+    .week:first-of-type { padding-top: 14px; }
+    .week:last-of-type  { padding-bottom: 6px; }
+    .week-title {
+      background: var(--band-bg); color: var(--band-tx);
+      font-weight: 700; font-size: 13px; letter-spacing: .04em;
+      padding: 7px 10px; margin-top: 14px;
+    }
+
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    th, td { border: 1px solid var(--grid); padding: 6px 4px; font-size: 13px; text-align: center; }
+    thead th { background: var(--head-bg); color: var(--head-tx); font-weight: 700; }
+    th.name, td.name { width: 96px; text-align: left; padding-left: 10px; }
+    td.name { font-weight: 600; background: #f2f2f2; white-space: nowrap; }
+    th.hk, td.hk-cell { width: 86px; }
+
+    /* Sel shift — warna persis spreadsheet */
+    td.cell { color: var(--cell-text); font-weight: 600; }
+    td.cell.s1    { background: var(--s1); }
+    td.cell.s2    { background: var(--s2); }
+    td.cell.libur { background: var(--libur); }
+    td.hk-cell    { background: var(--hari); color: var(--cell-text); }
+
+    /* ---- Riwayat & info ---- */
+    .extra { padding: 4px 14px 16px; }
+    .section-h { font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin: 16px 0 8px; }
+    .hist-row { font-size: 13px; padding: 5px 0; border-bottom: 1px solid #eee; display: flex; gap: 10px; }
+    .hist-row:last-child { border-bottom: none; }
+    .hist-c { font-weight: 700; min-width: 70px; }
+    .info {
+      background: #eef3fb; border: 1px solid #c5d6ef; border-left: 3px solid var(--title-bg);
+      padding: 11px 13px; margin: 16px 14px; font-size: 13px; color: #234; line-height: 1.5;
+    }
+    .info code { background: #dfe7f3; padding: 1px 5px; border-radius: 3px; }
+
+    .state { padding: 3rem 1rem; text-align: center; color: var(--muted); font-size: 14px; }
+    .err { color: #8a1f1f; background: #fbeaea; border: 1px solid #e3b7b7; margin: 14px; padding: 12px 14px; border-radius: 4px; font-size: 13px; }
+
+    @media (max-width: 640px) {
+      th, td { font-size: 11px; padding: 5px 2px; }
+      th.name, td.name { width: 64px; padding-left: 6px; }
+      th.hk, td.hk-cell { width: 56px; }
+      .title { font-size: 15px; }
+    }
   </style>
 </head>
 <body>
-<div class="container">
-  <h1>Jadwal Shift Technical Support</h1>
-  <p class="subtitle">Full Coverage · S1 06:00–14:00 · S2 13:00–21:00</p>
-
-  <div id="app"><div class="loading">Memuat jadwal…</div></div>
-</div>
+  <div class="sheet">
+    <div class="title">JADWAL SHIFT TECHNICAL SUPPORT — FULL COVERAGE</div>
+    <div id="app"><div class="state">Memuat jadwal…</div></div>
+  </div>
 
 <script>
 const DAYS  = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
 const WEEKS = ['Minggu 1','Minggu 2','Minggu 3','Minggu 4','Minggu 5'];
 
-// Pola shift per posisi [posisi][minggu][hari]
+// Pola shift per posisi (seat) -> [posisi][minggu][hari]. Sumber: sheet
+// "Shift Weekend Coverage (5P)". Personil dipetakan ke posisi via order di state.json.
 const PATTERN = [
   [["S2","S2","S2","LIBUR","S1","LIBUR","S1"],["S1","S1","S1","S1","LIBUR","S2","LIBUR"],["LIBUR","S1","S1","S1","S1","S1","LIBUR"],["S1","LIBUR","S2","S2","S2","S2","LIBUR"],["S2","S2","LIBUR","S2","S2","LIBUR","S2"]],
   [["S1","S1","S1","S1","LIBUR","S2","LIBUR"],["LIBUR","S1","S1","S1","S1","S1","LIBUR"],["S1","LIBUR","S2","S2","S2","S2","LIBUR"],["S2","S2","LIBUR","S2","S2","LIBUR","S2"],["S2","S2","S2","LIBUR","S1","LIBUR","S1"]],
@@ -112,78 +133,53 @@ const PATTERN = [
   [["S2","S2","LIBUR","S2","S2","LIBUR","S2"],["S2","S2","S2","LIBUR","S1","LIBUR","S1"],["S1","S1","S1","S1","LIBUR","S2","LIBUR"],["LIBUR","S1","S1","S1","S1","S1","LIBUR"],["S1","LIBUR","S2","S2","S2","S2","LIBUR"]],
 ];
 
-function badgeCls(s) { return s==='S1'?'s1':s==='S2'?'s2':'lib'; }
-function badge(s) { return `<span class="badge ${badgeCls(s)}">${s}</span>`; }
-function avatar(name) {
-  const hl = name==='Djaloe'||name==='Aji';
-  return `<div class="avatar${hl?' hl':''}">${name.slice(0,2).toUpperCase()}</div>`;
+const cls       = s => s === 'S1' ? 's1' : s === 'S2' ? 's2' : 'libur';
+const workdays  = row => row.filter(s => s !== 'LIBUR').length;
+
+function legend() {
+  return `<div class="legend">
+    <span><i class="sw s1"></i> S1 · 06:00–14:00</span>
+    <span><i class="sw s2"></i> S2 · 13:00–21:00</span>
+    <span><i class="sw libur"></i> LIBUR · OFF</span>
+  </div>`;
 }
 
-function renderApp(state) {
+function weekTable(order, wi) {
+  const head = `<tr><th class="name">Personil</th>${DAYS.map(d => `<th>${d}</th>`).join('')}<th class="hk">Hari Kerja</th></tr>`;
+  const body = order.map((name, pi) => {
+    const row = PATTERN[pi % PATTERN.length][wi];
+    const cells = row.map(s => `<td class="cell ${cls(s)}">${s}</td>`).join('');
+    return `<tr><td class="name">${name}</td>${cells}<td class="hk-cell">${workdays(row)} hari</td></tr>`;
+  }).join('');
+  return `<div class="week"><div class="week-title">${WEEKS[wi]}</div>
+    <table><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
+}
+
+function render(state) {
   const { cycle, order, history, last_reshuffled } = state;
-  const reshuffledStr = last_reshuffled
-    ? new Date(last_reshuffled).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})
-    : '—';
+  const dateStr = last_reshuffled
+    ? new Date(last_reshuffled).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+    : 'Belum pernah';
 
-  // Senin W1 shift per orang
-  const w1mon = order.map((_,i) => PATTERN[i][0][0]);
-
-  let html = `
-    <div class="cards">
-      <div class="card"><div class="card-label">Siklus aktif</div><div class="card-value">Siklus ${cycle}</div></div>
-      <div class="card"><div class="card-label">Terakhir diacak</div><div class="card-value" style="font-size:15px;padding-top:4px">${reshuffledStr}</div></div>
-    </div>
-
-    <div class="section-label">Urutan personil siklus ini · shift Senin W1</div>
-    <div style="margin-bottom:1.5rem">
-      ${order.map((name,i)=>`
-        <div class="person-row">
-          <span class="rank">${i+1}</span>
-          ${avatar(name)}
-          <span class="name${name==='Djaloe'||name==='Aji'?' bold':''}">${name}</span>
-          ${badge(w1mon[i])}
-        </div>`).join('')}
-    </div>
-
-    <div class="section-label">Jadwal lengkap 5 minggu</div>
-    <div class="week-grid">
-      <table>
-        <thead>
-          <tr>
-            <th class="name-col">Personil</th>
-            ${DAYS.map(d=>`<th>${d}</th>`).join('')}
-          </tr>
-        </thead>
-        <tbody>
-          ${WEEKS.map((wk,wi)=>`
-            <tr><td colspan="8" style="padding:10px 8px 4px; font-size:11px; font-weight:500; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;">${wk}</td></tr>
-            ${order.map((name,pi)=>`
-              <tr>
-                <td class="name-col">${name}</td>
-                ${PATTERN[pi][wi].map(s=>`<td>${badge(s)}</td>`).join('')}
-              </tr>`).join('')}
-          `).join('')}
-        </tbody>
-      </table>
+  let html = `<div class="meta">
+      <span>Siklus aktif: <b>${cycle}</b></span>
+      <span>Urutan: <b>${order.join(' → ')}</b></span>
+      <span>Terakhir diacak: <b>${dateStr}</b></span>
     </div>`;
+  html += legend();
+
+  for (let wi = 0; wi < WEEKS.length; wi++) html += weekTable(order, wi);
 
   if (history && history.length > 1) {
-    html += `
-      <div class="section-label">Riwayat reshuffle</div>
-      <div class="history">
-        ${history.map(h=>`
-          <div class="history-row">
-            <span class="history-cycle">Siklus ${h.cycle}</span>
-            <span>${h.order.join(' → ')}</span>
-          </div>`).join('')}
-      </div>`;
+    html += `<div class="extra"><div class="section-h">Riwayat reshuffle</div>` +
+      history.map(h => `<div class="hist-row"><span class="hist-c">Siklus ${h.cycle}</span><span>${h.order.join(' → ')}</span></div>`).join('') +
+      `</div>`;
   }
 
-  html += `
-    <div class="info-box">
-      <strong>Cara reshuffle:</strong> Pergi ke repo GitHub → tab <em>Actions</em> → pilih workflow <em>Reshuffle Jadwal Shift</em> → klik <em>Run workflow</em> → ketik <code>reshuffle</code> → konfirmasi.
-      Halaman ini akan otomatis update dalam ~1 menit setelah workflow selesai.
-    </div>`;
+  html += `<div class="info"><strong>Cara reshuffle:</strong> buka repo GitHub →
+    tab <em>Actions</em> → workflow <em>Reshuffle Jadwal Shift</em> →
+    <em>Run workflow</em> → ketik <code>reshuffle</code> → konfirmasi.
+    Halaman ini otomatis diperbarui ~1 menit setelah workflow selesai (atau saat di-refresh).</div>`;
 
   document.getElementById('app').innerHTML = html;
 }
@@ -192,16 +188,15 @@ async function loadState() {
   try {
     const res = await fetch('state.json?t=' + Date.now());
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const state = await res.json();
-    renderApp(state);
-  } catch(e) {
+    render(await res.json());
+  } catch (e) {
     document.getElementById('app').innerHTML =
-      `<div class="error">Gagal memuat state.json: ${e.message}</div>`;
+      `<div class="err">Gagal memuat state.json: ${e.message}</div>`;
   }
 }
 
 loadState();
-// Auto-refresh setiap 5 menit (berguna jika halaman dibiarkan terbuka saat Actions running)
+// Auto-refresh tiap 5 menit (berguna bila halaman dibiarkan terbuka saat Actions jalan)
 setInterval(loadState, 5 * 60 * 1000);
 </script>
 </body>

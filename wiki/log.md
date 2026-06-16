@@ -67,3 +67,17 @@ grep "^## \[" wiki/log.md | tail -5
   Indonesian `README.md` constraint section.
 - Resolved the two open items from the previous entry (display drift; name-vs-seat).
 - Not committed; `docs/state.json` not mutated (no reshuffle run).
+
+## [2026-06-15] ingest | Web dashboard rebuilt as a spreadsheet replica
+- Rewrote `docs/index.html` to look and act like the Excel "Shift Weekend Coverage
+  (5P)" sheet: title banner, color legend, one table per week with columns
+  `Personil | Sen…Min | Hari Kerja`. Goal: the web page replaces the .xlsx.
+- Extracted the spreadsheet's true conditional-formatting colors and matched them
+  exactly: S1 `#C6E0B4`, S2 `#FFE699`, LIBUR `#F4B084`, Hari Kerja `#B4C7E7`.
+- Kept the dynamic engine: fetch `state.json` (cache-busted, 5-min auto-refresh) and
+  map `order[i] → PATTERN[i]`, so a refresh after reshuffle re-renders the whole sheet.
+- Verified in a headless preview: PATTERN parity with `reshuffle.py` holds, computed
+  cell colors are byte-exact, and a simulated reshuffled order re-maps names onto the
+  seat patterns correctly.
+- Added `.claude/launch.json` (local static-server preview helper; not committed yet).
+- Pages touched: [[web-app]], [[index]] (no summary change needed), [[jadwal-xlsx]].
