@@ -1,11 +1,11 @@
 {
-  "cycle": 2,
+  "cycle": 3,
   "order": [
-    "Djaloe",
+    "Faza",
     "Dimas",
-    "Fazri",
     "Aji",
-    "Faza"
+    "Fazri",
+    "Djaloe"
   ],
   "history": [
     {
@@ -27,7 +27,17 @@
         "Aji",
         "Faza"
       ]
+    },
+    {
+      "cycle": 3,
+      "order": [
+        "Faza",
+        "Dimas",
+        "Aji",
+        "Fazri",
+        "Djaloe"
+      ]
     }
   ],
-  "last_reshuffled": "2026-06-18T07:01:22.363647+00:00"
+  "last_reshuffled": "2026-06-21T17:43:53.023703+00:00"
 }
