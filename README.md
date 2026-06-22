@@ -1,8 +1,8 @@
 # Shift Scheduler — Technical Support
 
-Web app jadwal shift tim Technical Support (5 orang) dengan **reshuffle otomatis tiap
-5 minggu** di bawah aturan keadilan. Tanpa backend, tanpa database — hanya halaman
-statis di **GitHub Pages** + satu script Python yang dijalankan **GitHub Actions**.
+Web app jadwal shift tim Technical Support (5 orang) dengan **reshuffle tiap 5 minggu**
+(dijalankan manual) di bawah aturan keadilan. Tanpa backend, tanpa database — hanya
+halaman statis di **GitHub Pages** + satu script Python yang dijalankan **GitHub Actions**.
 
 🔗 **Live:** https://rahmadnoorikhsan.github.io/Shift-Scheduler/
 
@@ -184,10 +184,13 @@ CLAUDE.md                        # Panduan untuk agen LLM
 
 Setelah ~1 menit `docs/state.json` terupdate otomatis dan halaman web mengikuti.
 
-### Reshuffle otomatis (cron)
-Workflow sudah dijadwalkan cron tiap **Minggu malam 23:00 WIB** (16:00 UTC). Saat ini
-cron akan reshuffle setiap kali jalan; jika ingin benar-benar hanya tiap 5 minggu,
-tambahkan pengecekan siklus/tanggal di `reshuffle.py`.
+### Reshuffle otomatis (cron) — DINONAKTIFKAN
+Cron sebelumnya berjalan tiap **Minggu malam 23:00 WIB** (16:00 UTC) tetapi reshuffle
+**setiap kali jalan** tanpa mengecek siklus, sehingga jadwal pernah ter-reshuffle
+sendiri secara tak terduga. Blok `schedule` di `reshuffle.yml` kini di-comment, jadi
+reshuffle **hanya manual** (tombol Run workflow). Untuk menghidupkan kembali: aktifkan
+lagi blok `schedule` **dan** tambahkan dulu pengecekan "hanya tiap 5 minggu" (anchor
+date) di `reshuffle.py` agar tidak terjadi reshuffle tak terduga lagi.
 
 ### Preview lokal
 ```bash

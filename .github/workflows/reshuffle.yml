@@ -9,11 +9,13 @@ on:
         required: true
         default: ''
 
-  # Auto-trigger tiap hari Minggu malam jam 23:00 WIB (16:00 UTC)
-  # Hanya akan reshuffle jika hari ini adalah akhir siklus ke-5
-  # (logika cek siklus ada di script Python)
-  schedule:
-    - cron: '0 16 * * 0'
+  # Cron dinonaktifkan 2026-06-22: dulu reshuffle TIAP Minggu tanpa cek siklus,
+  # menyebabkan reshuffle tak terduga (siklus 2 & 3 ke-fire sendiri) dan miscom.
+  # Reshuffle sekarang manual-only via tombol "Run workflow". Untuk menghidupkan
+  # lagi, kembalikan blok schedule di bawah DAN tambahkan gating tiap-5-minggu di
+  # reshuffle.py lebih dulu.
+  # schedule:
+  #   - cron: '0 16 * * 0'
 
 jobs:
   reshuffle:
